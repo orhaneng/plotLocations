@@ -3,28 +3,33 @@ import pandas as pd
 
 
 def plott():
-    data = pd.read_csv("/Users/omerorhan/Documents/EventDetection/csv/gpsrecords.csv")
+    data = pd.read_csv("/Users/omerorhan/Documents/EventDetection/csv/triplocations.csv")
     latitude_list = data["latitude"]
     longitude_list = data["longitude"]
 
     gmap3 = gmplot.GoogleMapPlotter(latitude_list[0],
-                                    longitude_list[0], 13)
-    gmap3.plot(latitude_list, longitude_list, 'cornflowerblue', edge_width=3.0)
+                                    longitude_list[0],18)
 
-    for index, row in data.iterrows():
-        if row['event type'] == 'RIGHT_TURN':
-            gmap3.marker(row['latitude'], row["longitude"], color="#FF0000", title="right")
-        elif row['event type'] == 'LEFT_TURN':
-            gmap3.marker(row['latitude'], row["longitude"], color="#0000FF", title="left")
-        elif row['event type'] == 'STOP':
-            gmap3.marker(row['latitude'], row["longitude"], color="#ffff00", title="stop")
-        elif row['event type'] == 'START':
-            gmap3.marker(row['latitude'], row["longitude"], color="#FFFFFF", title="start")
+    gmap3.scatter(latitude_list, longitude_list, '# FF0000',
+                  size=40, marker=False)
+    gmap3.plot(latitude_list, longitude_list,
+               'red', edge_width=2.5)
+    #gmap3.plot(latitude_list, longitude_list, 'cornflowerblue', edge_width=3.0)
+
+    # for index, row in data.iterrows():
+    #     if row['Event_id'] == 'RIGHT_TURN':
+    #         gmap3.marker(row['latitude'], row["longitude"], color="#FF0000", title=row['timestamp'])
+    #     elif row['Event_id'] == 'LEFT_TURN':
+    #         gmap3.marker(row['latitude'], row["longitude"], color="#0000FF", title=row['timestamp'])
+    #     elif row['Event_id'] == 'STOP':
+    #         gmap3.marker(row['latitude'], row["longitude"], color="#ffff00", title=row['timestamp'])
+    #     elif row['Event_id'] == 'START':
+    #         gmap3.marker(row['latitude'], row["longitude"], color="#FFFFFF", title=row['timestamp'])
 
     gmap3.draw("/Users/omerorhan/Documents/EventDetection/csv/map.html")
 
 
-plott()
+#plott()
 
 
 def creatingchart():
@@ -115,3 +120,40 @@ def distanceanalysis():
     data = data[data[""]]
 
 # distanceanalysis()
+
+
+def getlocations():
+    import requests
+    import json
+    # jsonurl = "http://prod-uploader-845833724.us-west-2.elb.amazonaws.com/api/v2/drivers/303623452/trips/303623452-4e4064e0a434467da251c7528ba0bcd7?facet=all"
+    # response_json = requests.get(jsonurl).content.decode(
+    #     "utf-8")
+    # trip = json.loads(response_json)
+
+    f = open('/Users/omerorhan/Documents/EventDetection/csv/trip.json', )
+    trip = json.load(f)
+
+
+
+    if 'route' in trip:
+        #data = pd.DataFrame(trip['route'])
+        data = pd.DataFrame(trip['route'][0]['geoPoints'])
+        data.to_csv("/Users/omerorhan/Documents/EventDetection/csv/triplocations.csv")
+
+
+
+
+    print(data)
+
+
+#getlocations()
+
+
+
+import matplotlib.pyplot as plt
+
+x = [1, 2, 3, 4, 5, 6]
+y = [1, 5, 3, 5, 7, 8]
+
+plt.plot(x, y)
+plt.show()
