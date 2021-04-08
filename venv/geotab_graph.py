@@ -5,11 +5,13 @@ import requests
 
 def getgraph(x,y,pmevents):
     plt.plot(x, y)
+    plt.xlabel("Time")
+    plt.ylabel("Speed (MPH)")
     plt.plot(x, pmevents)
     plt.show()
 
 def geotab_graph_geopoints():
-    f = open('/Users/omerorhan/Downloads/302686453-17b463eebb344d5cbe08e2eee7235247_reprocessed.json', )
+    f = open('/Users/omerorhan/Downloads/trip-303907596-d5d5c07809f04a498f08672cc289a0da.json', )
     data = json.load(f)
     pmevents = []
 
@@ -57,14 +59,16 @@ def geotab_graph_geopoints():
     pmevens = [data['speed'] for data in pmevents]
 
     plt.plot(x, y)
+    plt.xlabel("Time")
+    plt.ylabel("Speed (MPH)")
     plt.plot(x, pmevens)
     plt.show()
 
 
-# geotab_graph_geopoints()
+#geotab_graph_geopoints()
 
 def geotab_graph_dynamo():
-    jsonurl = "http://prod-uploader-845833724.us-west-2.elb.amazonaws.com/api/v2/drivers/304072292/trips/304072292-2c134b3e366b453ab313003d13fdb8a9?facet=all"
+    jsonurl = "http://prod-uploader-845833724.us-west-2.elb.amazonaws.com/api/v2/drivers/302122596/trips/302122596-1385a0178db9470089f2717e704444d7?facet=all"
     response_json = requests.get(jsonurl).content.decode(
         "utf-8")
     data = json.loads(response_json)
