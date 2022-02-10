@@ -1,44 +1,70 @@
 import gmplot
 import pandas as pd
+import geopy.distance
 
+#CSVUTILS saveturngpsrecord FUNCTION
 
 def plott():
-    data = pd.read_csv("/Users/omerorhan/Documents/EventDetection/csv/locationList.csv")
+    data = pd.read_csv("/Users/omerorhan/Documents/EventDetection/fraud/stage/alltrips.csv")
+    
+    latitude_list = data["lat"]
+    longitude_list = data["lon"]
 
-    gpslatitude_list = data["lat"]
-    gpslongitude_list = data["lon"]
-    
-    data = data.dropna()
-    
-    # latitude_list = data["snaplatitude"]
-    # longitude_list = data["snaplongitude"]
-
-    # gmap3 = gmplot.GoogleMapPlotter(latitude_list[0],
-    #                                 longitude_list[0], 18)
-    # gmap3.scatter(latitude_list, longitude_list, '# FF0000',
-    #               size=40, marker=False)
-    # gmap3.plot(latitude_list, longitude_list,
-    #            'red', edge_width=2.5)
-    
-    gmap3 = gmplot.GoogleMapPlotter(gpslatitude_list[0],
-                                    gpslongitude_list[0], 15)
-    gmap3.scatter(gpslatitude_list, gpslongitude_list, '# FF0000',
-                  size=2, marker=False)
-    gmap3.plot(gpslatitude_list, gpslongitude_list,
+    gmap3 = gmplot.GoogleMapPlotter(latitude_list[0],
+                                    longitude_list[0], 18)
+    gmap3.scatter(latitude_list, longitude_list, '# FF0000',
+                  size=40, marker=False)
+    gmap3.plot(latitude_list, longitude_list,
                'red', edge_width=2.5)
     
-    # gmap3.plot(latitude_list, longitude_list, 'cornflowerblue', edge_width=3.0)
+    gmap3.plot(latitude_list, longitude_list, 'cornflowerblue', edge_width=3.0)
 
     # for index, row in data.iterrows():
     #     #if row['confidece'] > 0.0:
-    #     gmap3.marker(row['snaplatitude'], row["snaplongitude"], color="#ffff00", title=row['snapconfidence'])
-    # #     elif row['Event_id'] == 'LEFT_TURN':
+    #     gmap3.marker(row['latitude'], row["longitude"], color="#ffff00", title=row['snapconfidence'])
+    #     elif row['Event_id'] == 'LEFT_TURN':
     #         gmap3.marker(row['latitude'], row["longitude"], color="#0000FF", title=row['timestamp'])
     #     elif row['Event_id'] == 'STOP':
     #         gmap3.marker(row['latitude'], row["longitude"], color="#ffff00", title=row['timestamp'])
     #     elif row['Event_id'] == 'START':
     #         gmap3.marker(row['latitude'], row["longitude"], color="#FFFFFF", title=row['timestamp'])
 
+    dict = {}
+    '''
+    321153670-a2b7b3c2a7cc4c5a800010e8e40bc0bf   Samsung G981U1
+    321153677-28b084b108ee4309b75d7f0b14151739   Samsung G973EU1
+    321154601-f8cf35b44b594af38a69bdd1b2cfe5bb   Motorola
+    321154608-7df63e39c20a4c6481937800909c739f   Google Pixel3
+    
+    '''
+    for index, row in data.iterrows():
+        if not (row['trip_id']=='321153677-28b084b108ee4309b75d7f0b14151739' or row['trip_id']=='321154608-7df63e39c20a4c6481937800909c739f'):
+            continue
+
+        if '09:34:25' in row['location_time']:
+            bbb = ""
+        if not row['location_time'] in dict:
+            dict[row['location_time']] = []
+        list = dict[row['location_time']]
+        list.append((row['lat'], row["lon"]))
+        dict[row['location_time']] = list
+        if row['trip_id'] == '303795449-ae60e9888aa84507879df2a2b9087765':
+            gmap3.marker(row['lat'], row["lon"], color="#0000FF", title=row['location_time']+"- Driver: 303795449")
+        if row['trip_id'] == '303860724-e354f7d73a6c4317a1e4ef2593111b67':
+            gmap3.marker(row['lat'], row["lon"], color="#FF0000", title=row['location_time'] + "- Driver: 303860724")
+
+
+    print(dict)
+
+    dict_res = []
+    for key, value in dict.items():
+        if len(value)==2:
+            coordinate1 = value[0]
+            coordinate2 = value[1]
+            dict_res.append([key,geopy.distance.distance(coordinate1,coordinate2).m])
+
+    df = pd.DataFrame(dict_res)
+    df.to_csv("/Users/omerorhan/Documents/EventDetection/fraud/trips_distance_comp.csv")
     gmap3.draw("/Users/omerorhan/Documents/EventDetection/csv/map.html")
 
 

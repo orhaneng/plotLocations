@@ -2,16 +2,28 @@ import matplotlib.pyplot as plt
 import json
 import copy
 import requests
+import pandas as pd
 
-def getgraph(x,y,pmevents):
+
+def getgraph(x, y, pmevents):
     plt.plot(x, y)
     plt.xlabel("Time")
     plt.ylabel("Speed (MPH)")
     plt.plot(x, pmevents)
     plt.show()
 
+
+def getgraphdataframe(dataframe, events):
+    plt.plot(dataframe['timeOffset'], dataframe['speed'])
+    plt.axvspan(events[0][0], events[0][1], color='red', alpha=0.5)
+    # plt.plot(x, pmevents)
+    plt.xlabel("Time")
+    plt.ylabel("Speed")
+    plt.show()
+
+
 def geotab_graph_geopoints():
-    f = open('/Users/omerorhan/Downloads/302686453-17b463eebb344d5cbe08e2eee7235247_reprocessed (3).json', )
+    f = open('/Users/omerorhan/Downloads/302952908-e963e9e1af704f3f8bb105f0e4fa96e3_reprocessed (1).json', )
     data = json.load(f)
     pmevents = []
 
@@ -35,21 +47,56 @@ def geotab_graph_geopoints():
             temp['speed'] = 0.0
             pmevents.append(temp)
 
+    dataframe = pd.DataFrame(data['route'][0]['geoPoints'])
+
+    orgdict = copy.deepcopy(data['route'][0]['geoPoints'])
+    lasttimestamp = orgdict[len(orgdict) - 1]['timeOffset']
+    orgdict.append({'latitude': '', 'longitude': '', 'timeOffset': -1000.0, 'speed': 0.0, 'speedLimit': ''})
+    orgdict.append({'latitude': '', 'longitude': '', 'timeOffset': -2000.0, 'speed': 0.0, 'speedLimit': ''})
+    orgdict.append({'latitude': '', 'longitude': '', 'timeOffset': -3000.0, 'speed': 0.0, 'speedLimit': ''})
+
+    diclist = data['route'][0]['geoPoints']
+    diclist.append({'latitude': '', 'longitude': '', 'timeOffset': -1000.0, 'speed': 0.0, 'speedLimit': ''})
+    diclist.append({'latitude': '', 'longitude': '', 'timeOffset': -2000.0, 'speed': 0.0, 'speedLimit': ''})
+    diclist.append({'latitude': '', 'longitude': '', 'timeOffset': -3000.0, 'speed': 0.0, 'speedLimit': ''})
+
+    diclist = sorted(diclist, key=lambda i: i['timeOffset'])
+    orgdict = sorted(orgdict, key=lambda i: i['timeOffset'])
+
+    orgdictmod = []
+
+    for index, val in enumerate(orgdict):
+        if index < 2:
+            continue
+        orgdict[index-3]['speed'] = orgdict[index]['speed']
+
+    dataframeshifted = pd.DataFrame(diclist)
+    orgdataframe = pd.DataFrame(orgdict)
+
+    plt.plot(dataframeshifted['timeOffset'], dataframeshifted['speed'], color='black')
+    plt.plot(orgdataframe['timeOffset'], orgdataframe['speed'], color='red')
+
+    # plt.axvspan(events[0][0], events[0][1], color='red', alpha=0.5)
+    # plt.plot(x, pmevents)
+    plt.xlabel("Time")
+    plt.ylabel("Speed")
+    plt.show()
+
     newgeopoints = sorted(newgeopoints, key=lambda i: i['timeOffset'])
     if 'events' in data:
         for event in data['events']:
             if event['eventType'] == 'PHONE_MANIPULATION':
                 startoffset = event['startOffset']
-                newpoint = {'latitude': "", 'longitude': '', 'timeOffset': startoffset, 'speed': 1.0}
+                newpoint = {'latitude': "", 'longitude': '', 'timeOffset': startoffset, 'speed': 3.0}
                 pmevents.append(newpoint)
                 pmevents.remove(pmevents[0])
                 startoffset = int((startoffset + 1000) / 1000)
                 endoffset = int(event['endOffset'] / 1000)
                 for startoffset in range(startoffset, endoffset):
-                    newpoint = {'latitude': "", 'longitude': '', 'timeOffset': startoffset * 1000, 'speed': 1.0}
+                    newpoint = {'latitude': "", 'longitude': '', 'timeOffset': startoffset * 1000, 'speed': 3.0}
                     pmevents.append(newpoint)
                     pmevents.remove(pmevents[0])
-                newpoint = {'latitude': "", 'longitude': '', 'timeOffset': event['endOffset'], 'speed': 1.0}
+                newpoint = {'latitude': "", 'longitude': '', 'timeOffset': event['endOffset'], 'speed': 3.0}
                 pmevents.append(newpoint)
                 pmevents.remove(pmevents[0])
     pmevents = sorted(pmevents, key=lambda i: i['timeOffset'])
@@ -58,23 +105,21 @@ def geotab_graph_geopoints():
     y = [data['speed'] * 2.23694 for data in newgeopoints]
     pmevens = [data['speed'] for data in pmevents]
 
-    plt.plot(x, y)
-    plt.xlabel("Time")
-    plt.ylabel("Speed (MPH)")
-    plt.plot(x, pmevens)
-    plt.show()
+    # plt.plot(x, y)
+    # plt.xlabel("Time")
+    # plt.ylabel("Speed (MPH)")
+    # plt.plot(x, pmevens)
+    # plt.show()
 
 
-#geotab_graph_geopoints()
+geotab_graph_geopoints()
+
 
 def geotab_graph_dynamo():
-    # jsonurl = "http://prod-uploader-845833724.us-west-2.elb.amazonaws.com/api/v2/drivers/304072292/trips/304072292-2c134b3e366b453ab313003d13fdb8a9?facet=all"
-    #     # response_json = requests.get(jsonurl).content.decode(
-    #     #     "utf-8")
-
-    f = open('/Users/omerorhan/Documents/EventDetection/graphs/geotab speeding/304072292-2c134b3e366b453ab313003d13fdb8a9_one_overlap_.json', )
-    data = json.load(f)
-    #data = json.loads(response_json)
+    jsonurl = "http://prod-uploader-845833724.us-west-2.elb.amazonaws.com/api/v2/drivers/305442165/trips/305442165-672071106ae04c27b1c236cb856a3a3b?facet=all"
+    response_json = requests.get(jsonurl).content.decode(
+        "utf-8")
+    data = json.loads(response_json)
 
     # f = open('/Users/omerorhan/Downloads/302686453-17b463eebb344d5cbe08e2eee7235247_reprocessed.json', )
     # data = json.load()
@@ -106,16 +151,16 @@ def geotab_graph_dynamo():
         for event in data['events']:
             if event['eventType'] == 'PHONE_MANIPULATION':
                 startoffset = event['startTimestamp']
-                newpoint = {'latitude': "", 'longitude': '', 'timeOffset': startoffset, 'speed': 3.0}
+                newpoint = {'latitude': "", 'longitude': '', 'timeOffset': startoffset, 'speed': 10.0}
                 pmevents.append(newpoint)
                 pmevents.remove(pmevents[0])
                 startoffset = int((startoffset + 1000) / 1000)
                 endoffset = int(event['endTimestamp'] / 1000)
                 for startoffset in range(startoffset, endoffset):
-                    newpoint = {'latitude': "", 'longitude': '', 'timeOffset': startoffset * 1000, 'speed': 3.0}
+                    newpoint = {'latitude': "", 'longitude': '', 'timeOffset': startoffset * 1000, 'speed': 10.0}
                     pmevents.append(newpoint)
                     pmevents.remove(pmevents[0])
-                newpoint = {'latitude': "", 'longitude': '', 'timeOffset': event['endTimestamp'], 'speed': 3.0}
+                newpoint = {'latitude': "", 'longitude': '', 'timeOffset': event['endTimestamp'], 'speed': 10.0}
                 pmevents.append(newpoint)
                 pmevents.remove(pmevents[0])
     pmevents = sorted(pmevents, key=lambda i: i['timeOffset'])
@@ -126,7 +171,11 @@ def geotab_graph_dynamo():
 
     getgraph(x, y, pmevents)
 
+    # plt.plot(dataframe['timeOffset'], dataframe['speed'])
+    # plt.axvspan(events[0][0], events[0][1], color='red', alpha=0.5)
+    # plt.plot(x, pmevents)
+    # plt.xlabel("Time")
+    # plt.ylabel("Speed")
+    # plt.show()
 
-geotab_graph_dynamo()
-
-
+#geotab_graph_dynamo()
