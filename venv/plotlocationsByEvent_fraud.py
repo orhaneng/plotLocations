@@ -2,11 +2,12 @@ import gmplot
 import pandas as pd
 import geopy.distance
 
-#CSVUTILS saveturngpsrecord FUNCTION
+
+# CSVUTILS saveturngpsrecord FUNCTION
 
 def plott():
     data = pd.read_csv("/Users/omerorhan/Documents/EventDetection/fraud/stage/alltrips.csv")
-    
+
     latitude_list = data["lat"]
     longitude_list = data["lon"]
 
@@ -16,8 +17,11 @@ def plott():
                   size=40, marker=False)
     gmap3.plot(latitude_list, longitude_list,
                'red', edge_width=2.5)
-    
+
     gmap3.plot(latitude_list, longitude_list, 'cornflowerblue', edge_width=3.0)
+
+    for index, row in data.iterrows():
+        gmap3.marker(row['latitude'], row["longitude"], color="#ffff00", title=row['snapconfidence'])
 
     # for index, row in data.iterrows():
     #     #if row['confidece'] > 0.0:
@@ -38,7 +42,8 @@ def plott():
     
     '''
     for index, row in data.iterrows():
-        if not (row['trip_id']=='321153677-28b084b108ee4309b75d7f0b14151739' or row['trip_id']=='321154608-7df63e39c20a4c6481937800909c739f'):
+        if not (row['trip_id'] == '321153677-28b084b108ee4309b75d7f0b14151739' or row[
+            'trip_id'] == '321154608-7df63e39c20a4c6481937800909c739f'):
             continue
 
         if '09:34:25' in row['location_time']:
@@ -49,19 +54,18 @@ def plott():
         list.append((row['lat'], row["lon"]))
         dict[row['location_time']] = list
         if row['trip_id'] == '303795449-ae60e9888aa84507879df2a2b9087765':
-            gmap3.marker(row['lat'], row["lon"], color="#0000FF", title=row['location_time']+"- Driver: 303795449")
+            gmap3.marker(row['lat'], row["lon"], color="#0000FF", title=row['location_time'] + "- Driver: 303795449")
         if row['trip_id'] == '303860724-e354f7d73a6c4317a1e4ef2593111b67':
             gmap3.marker(row['lat'], row["lon"], color="#FF0000", title=row['location_time'] + "- Driver: 303860724")
-
 
     print(dict)
 
     dict_res = []
     for key, value in dict.items():
-        if len(value)==2:
+        if len(value) == 2:
             coordinate1 = value[0]
             coordinate2 = value[1]
-            dict_res.append([key,geopy.distance.distance(coordinate1,coordinate2).m])
+            dict_res.append([key, geopy.distance.distance(coordinate1, coordinate2).m])
 
     df = pd.DataFrame(dict_res)
     df.to_csv("/Users/omerorhan/Documents/EventDetection/fraud/trips_distance_comp.csv")
@@ -188,9 +192,3 @@ def getlocations():
 # datamap = pd.read_csv("/Users/omerorhan/Documents/EventDetection/csv/turkey/304287611-10eff5aa5a434d99921cc41d0b571689/speedlimit_mapbox.csv",index_col=False)
 #
 # data = pd.merge(data, datamap, on=['timestamp']).to_csv("/Users/omerorhan/Documents/EventDetection/csv/turkey/304287611-10eff5aa5a434d99921cc41d0b571689/speedlimitmerged.csv")
-
-
-
-
-
-

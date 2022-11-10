@@ -5,7 +5,7 @@ import geopy.distance
 #CSVUTILS saveturngpsrecord FUNCTION
 
 def plott():
-    data = pd.read_csv("/Users/omerorhan/Documents/EventDetection/fraud/307476330-f2169e00e1b7488288af06b0f59ea299_302708062-a08dd9cd06c145b3affe74b31484ed98_short.csv")
+    data = pd.read_csv("/Users/omerorhan/Documents/EventDetection/csv/speedlimit.csv")
     
     latitude_list = data["latitude"]
     longitude_list = data["longitude"]
@@ -19,11 +19,11 @@ def plott():
     
     gmap3.plot(latitude_list, longitude_list, 'cornflowerblue', edge_width=3.0)
 
-    # for index, row in data.iterrows():
-    #     #if row['confidece'] > 0.0:
-    #     gmap3.marker(row['latitude'], row["longitude"], color="#ffff00", title=row['snapconfidence'])
-    #     elif row['Event_id'] == 'LEFT_TURN':
-    #         gmap3.marker(row['latitude'], row["longitude"], color="#0000FF", title=row['timestamp'])
+    for index, row in data.iterrows():
+        # #if row['confidece'] > 0.0:
+        # gmap3.marker(row['latitude'], row["longitude"], color="#ffff00", title=row['snapconfidence'])
+        if row['Event_id'] == 'SPEEDING':
+            gmap3.marker(row['latitude'], row["longitude"], color="#0000FF", title=row['timestamp'])
     #     elif row['Event_id'] == 'STOP':
     #         gmap3.marker(row['latitude'], row["longitude"], color="#ffff00", title=row['timestamp'])
     #     elif row['Event_id'] == 'START':
@@ -33,7 +33,7 @@ def plott():
 
     for index, row in data.iterrows():
 
-        if row['Event_id'] == 'LEFT_TURN':
+        if row['Event_id'] == 'PHONE_MANIPULATION':
             gmap3.marker(row['latitude'], row["longitude"], color="#0000FF", title=row['timestamp'])
 
 

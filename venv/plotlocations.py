@@ -3,13 +3,20 @@ import pandas as pd
 
 
 def plott():
-    data = pd.read_csv("/Users/omerorhan/Documents/EventDetection/csv/locationList.csv")
+    data = pd.read_csv("/Users/omerorhan/Documents/EventDetection/csv/gpsmerged.csv")
+    #data = pd.read_csv("/Users/omerorhan/Documents/EventDetection/csv/locationList.csv")
 
-    gpslatitude_list = data["lat"]
-    gpslongitude_list = data["lon"]
-    
     data = data.dropna()
-    
+
+    gpslatitude_list = data["snaplat"]
+    gpslongitude_list = data["snaplon"]
+
+
+    # gpslatitude_list = data["lat"]
+    # gpslongitude_list = data["lon"]
+    #
+
+
     # latitude_list = data["snaplatitude"]
     # longitude_list = data["snaplongitude"]
 
@@ -19,30 +26,41 @@ def plott():
     #               size=40, marker=False)
     # gmap3.plot(latitude_list, longitude_list,
     #            'red', edge_width=2.5)
-    
-    gmap3 = gmplot.GoogleMapPlotter(gpslatitude_list[0],
-                                    gpslongitude_list[0], 15)
+
+    gmap3 = gmplot.GoogleMapPlotter(list(gpslatitude_list)[0],
+                                    list(gpslongitude_list)[0], 15)
     gmap3.scatter(gpslatitude_list, gpslongitude_list, '# FF0000',
                   size=2, marker=False)
     gmap3.plot(gpslatitude_list, gpslongitude_list,
                'red', edge_width=2.5)
-    
-    # gmap3.plot(latitude_list, longitude_list, 'cornflowerblue', edge_width=3.0)
 
-    # for index, row in data.iterrows():
-    #     #if row['confidece'] > 0.0:
-    #     gmap3.marker(row['snaplatitude'], row["snaplongitude"], color="#ffff00", title=row['snapconfidence'])
-    # #     elif row['Event_id'] == 'LEFT_TURN':
-    #         gmap3.marker(row['latitude'], row["longitude"], color="#0000FF", title=row['timestamp'])
-    #     elif row['Event_id'] == 'STOP':
-    #         gmap3.marker(row['latitude'], row["longitude"], color="#ffff00", title=row['timestamp'])
-    #     elif row['Event_id'] == 'START':
-    #         gmap3.marker(row['latitude'], row["longitude"], color="#FFFFFF", title=row['timestamp'])
-
-    gmap3.draw("/Users/omerorhan/Documents/EventDetection/csv/map.html")
+    gmap3.draw("/Users/omerorhan/Documents/EventDetection/csv/map4.html")
 
 
 plott()
+
+import gmplot
+import pandas as pd
+from math import nan, isnan
+
+
+def plott():
+    data = pd.read_csv("/Users/omerorhan/Downloads/file (2).csv")
+
+    SnapLatitude1 = data["SnappedLatitude"]
+    SnapLongitude1 = data["SnappedLongitude"]
+    SnapLatitude = list(filter(lambda x: isnan(x) == False, SnapLatitude1))
+    SnapLongitude = list(filter(lambda x: isnan(x) == False, SnapLongitude1))
+    gmap3 = gmplot.GoogleMapPlotter(SnapLatitude[0], SnapLongitude[0], 15)
+    gmap3.scatter(SnapLatitude, SnapLongitude, '#FF0000',
+                  size=10, marker=False)
+    gmap3.plot(SnapLatitude, SnapLongitude,
+               'red', edge_width=2.5)
+
+    gmap3.draw("/Users/omerorhan/Documents/EventDetection/csv/map2.html")
+
+
+#plott()
 
 
 def creatingchart():
@@ -162,6 +180,7 @@ def getlocations():
 # datamap = pd.read_csv("/Users/omerorhan/Documents/EventDetection/csv/turkey/304287611-10eff5aa5a434d99921cc41d0b571689/speedlimit_mapbox.csv",index_col=False)
 #
 # data = pd.merge(data, datamap, on=['timestamp']).to_csv("/Users/omerorhan/Documents/EventDetection/csv/turkey/304287611-10eff5aa5a434d99921cc41d0b571689/speedlimitmerged.csv")
+
 
 
 
