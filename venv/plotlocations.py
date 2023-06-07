@@ -3,13 +3,13 @@ import pandas as pd
 
 
 def plott():
-    data = pd.read_csv("/Users/omerorhan/Documents/EventDetection/csv/gpsmerged.csv")
-    #data = pd.read_csv("/Users/omerorhan/Documents/EventDetection/csv/locationList.csv")
+    #data = pd.read_csv("/Users/omerorhan/Documents/EventDetection/regression_server/regressiontest/results/310623838/310623838-efe1c01bc1294556b669ba3494dd1c00/LOCATIONS.csv")
+    data = pd.read_csv("/Users/omerorhan/Documents/EventDetection/csv/309136933-dba58dd9db884a90ad7bc65fd28ca390.csv")
 
-    data = data.dropna()
+    #data = data.dropna()
 
-    gpslatitude_list = data["snaplat"]
-    gpslongitude_list = data["snaplon"]
+    gpslatitude_list = data["GPSlatitude"]
+    gpslongitude_list = data["GPSlongitude"]
 
 
     # gpslatitude_list = data["lat"]
@@ -27,18 +27,27 @@ def plott():
     # gmap3.plot(latitude_list, longitude_list,
     #            'red', edge_width=2.5)
 
+
     gmap3 = gmplot.GoogleMapPlotter(list(gpslatitude_list)[0],
                                     list(gpslongitude_list)[0], 15)
     gmap3.scatter(gpslatitude_list, gpslongitude_list, '# FF0000',
                   size=2, marker=False)
     gmap3.plot(gpslatitude_list, gpslongitude_list,
                'red', edge_width=2.5)
+    # for index, row in data.iterrows():
+    #     if row['EVENT'] == 'HARD_CORNERING':
+    #         gmap3.marker(row['GPS_LAT'], row["GPS_LON"], color="#0000FF", title=row['timestamp'])
+    # for index, row in data.iterrows():
+    #     # #if row['confidece'] > 0.0:
+    #     # gmap3.marker(row['latitude'], row["longitude"], color="#ffff00", title=row['snapconfidence'])
+    #     gmap3.marker(row['GPS_LAT'], row["GPS_LAT"], color="#0000FF", title=row['speed'])
 
-    gmap3.draw("/Users/omerorhan/Documents/EventDetection/csv/map4.html")
+    gmap3.draw("/Users/omerorhan/Documents/EventDetection/csv/maprefactor.html")
 
 
 plott()
 
+'''
 import gmplot
 import pandas as pd
 from math import nan, isnan
@@ -184,6 +193,6 @@ def getlocations():
 
 
 
-
+'''
 
 

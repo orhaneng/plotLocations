@@ -5,25 +5,25 @@ import geopy.distance
 #CSVUTILS saveturngpsrecord FUNCTION
 
 def plott():
-    data = pd.read_csv("/Users/omerorhan/Documents/EventDetection/csv/speedlimit.csv")
+    data = pd.read_csv("/Users/omerorhan/Documents/EventDetection/csv/305003923-d492f02e656141e880745db89a9b993e.csv")
     
-    latitude_list = data["latitude"]
-    longitude_list = data["longitude"]
+    latitude_list = data["GPSlatitude"]
+    longitude_list = data["GPSlongitude"]
 
     gmap3 = gmplot.GoogleMapPlotter(latitude_list[0],
                                     longitude_list[0], 18)
     gmap3.scatter(latitude_list, longitude_list, '# FF0000',
-                  size=40, marker=False)
+                  size=2, marker=False)
     gmap3.plot(latitude_list, longitude_list,
-               'red', edge_width=2.5)
+               'red', edge_width=1)
     
-    gmap3.plot(latitude_list, longitude_list, 'cornflowerblue', edge_width=3.0)
+    gmap3.plot(latitude_list, longitude_list, 'cornflowerblue', edge_width=1.0)
 
     for index, row in data.iterrows():
         # #if row['confidece'] > 0.0:
         # gmap3.marker(row['latitude'], row["longitude"], color="#ffff00", title=row['snapconfidence'])
-        if row['Event_id'] == 'SPEEDING':
-            gmap3.marker(row['latitude'], row["longitude"], color="#0000FF", title=row['timestamp'])
+        if row['event'] == 'SPEEDING':
+            gmap3.marker(row['GPSlatitude'], row["GPSlongitude"], color="#0000FF", title=row['timestamp'])
     #     elif row['Event_id'] == 'STOP':
     #         gmap3.marker(row['latitude'], row["longitude"], color="#ffff00", title=row['timestamp'])
     #     elif row['Event_id'] == 'START':
@@ -31,10 +31,10 @@ def plott():
 
     dict = {}
 
-    for index, row in data.iterrows():
-
-        if row['Event_id'] == 'PHONE_MANIPULATION':
-            gmap3.marker(row['latitude'], row["longitude"], color="#0000FF", title=row['timestamp'])
+    # for index, row in data.iterrows():
+    #
+    #     if row['Event_id'] == 'PHONE_MANIPULATION':
+    #         gmap3.marker(row['latitude'], row["longitude"], color="#0000FF", title=row['timestamp'])
 
 
     print(dict)
