@@ -3,30 +3,14 @@ import pandas as pd
 
 
 def plott():
-    #data = pd.read_csv("/Users/omerorhan/Documents/EventDetection/regression_server/regressiontest/results/310623838/310623838-efe1c01bc1294556b669ba3494dd1c00/LOCATIONS.csv")
-    data = pd.read_csv("/Users/omerorhan/Documents/EventDetection/csv/309136933-dba58dd9db884a90ad7bc65fd28ca390.csv")
-
-    #data = data.dropna()
-
-    gpslatitude_list = data["GPSlatitude"]
-    gpslongitude_list = data["GPSlongitude"]
+    data = pd.read_csv("/Users/omerorhan/Documents/EventDetection/csv/gpsrecords.csv")
+    data = data.dropna(subset=["latitude"])
+    data = data.reset_index(drop=True)
+    gpslatitude_list = data["latitude"]
+    gpslongitude_list = data["longitude"]
 
 
-    # gpslatitude_list = data["lat"]
-    # gpslongitude_list = data["lon"]
-    #
-
-
-    # latitude_list = data["snaplatitude"]
-    # longitude_list = data["snaplongitude"]
-
-    # gmap3 = gmplot.GoogleMapPlotter(latitude_list[0],
-    #                                 longitude_list[0], 18)
-    # gmap3.scatter(latitude_list, longitude_list, '# FF0000',
-    #               size=40, marker=False)
-    # gmap3.plot(latitude_list, longitude_list,
-    #            'red', edge_width=2.5)
-
+    # Reset the index of the DataFrame
 
     gmap3 = gmplot.GoogleMapPlotter(list(gpslatitude_list)[0],
                                     list(gpslongitude_list)[0], 15)
@@ -34,14 +18,6 @@ def plott():
                   size=2, marker=False)
     gmap3.plot(gpslatitude_list, gpslongitude_list,
                'red', edge_width=2.5)
-    # for index, row in data.iterrows():
-    #     if row['EVENT'] == 'HARD_CORNERING':
-    #         gmap3.marker(row['GPS_LAT'], row["GPS_LON"], color="#0000FF", title=row['timestamp'])
-    # for index, row in data.iterrows():
-    #     # #if row['confidece'] > 0.0:
-    #     # gmap3.marker(row['latitude'], row["longitude"], color="#ffff00", title=row['snapconfidence'])
-    #     gmap3.marker(row['GPS_LAT'], row["GPS_LAT"], color="#0000FF", title=row['speed'])
-
     gmap3.draw("/Users/omerorhan/Documents/EventDetection/csv/maprefactor.html")
 
 
