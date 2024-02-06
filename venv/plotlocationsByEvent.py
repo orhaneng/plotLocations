@@ -5,7 +5,7 @@ import geopy.distance
 #CSVUTILS saveturngpsrecord FUNCTION
 
 def plott():
-    data = pd.read_csv("/Users/omerorhan/Documents/EventDetection/JIRA/TLM-783/ecolab_japan/HERE VS HEREJAPAN/305062891-540ba005f9614af79ea5c27fc8c4bb97/305062891-540ba005f9614af79ea5c27fc8c4bb97_HERE.csv")
+    data = pd.read_csv("/Users/omerorhan/Documents/EventDetection/csv/gpsrecords.csv")
     data = data.dropna(subset=["SNAPlatitude"])
     data = data.reset_index(drop=True)
     latitude_list = data["SNAPlatitude"]
@@ -18,7 +18,7 @@ def plott():
                   size=2, marker=False)
     gmap3.plot(latitude_list, longitude_list,
                'red', edge_width=1)
-    
+
     gmap3.plot(latitude_list, longitude_list, 'cornflowerred', edge_width=1.0)
 
     for index, row in data.iterrows():
